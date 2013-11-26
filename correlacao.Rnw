@@ -1,0 +1,358 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[brazil,brazilian]{babel}
+
+\title {Correlações e regressão}
+\author {Amer Cavalheiro Hamdan}
+\date {\today}
+
+\begin{document}
+\maketitle
+
+\SweaveOpts{concordance=TRUE}
+
+
+Resumo \\
+
+\\
+Definição de correlaçção\\
+Gráfico de correlação\\
+Tipos de correlação\\
+Correlação de Pearson\\
+Regressão linear simples\\
+Regressão linear múltipla\\
+\\
+
+O que é correlação?\\
+\\
+Correlação é a **associação** ou relacionamento entre duas variáveis.\\
+  - variam quanto a sua **intensidade** ou força.\\
+  - variam quanto a direção (**positivas** ou **negativas**)\\
+  - podem ser representadas por gráficos\\
+\\
+
+
+Correlação: exemplo 1\\
+\\
+<<>>=
+x <- c(1, 2, 3, 4, 5)  #criando um vetor qualquer 
+y <- c(6, 7, 8, 9, 10) #criando outro vetor
+@
+
+
+\begin{center}
+<<fig=TRUE>>=
+plot(x,y) #desenhando um gráfico de dispersão
+@
+\end{center}
+
+
+Correlação: exemplo 2\\
+
+\\
+<<>>=
+idade = c(76, 60, 70, 72, 69, 73, 64, 70, 88, 66)
+meem = c(27, 29, 27, 18, 27, 25, 28, 24, 25, 28)
+da = data.frame(idade, meem)
+da
+@
+\\
+
+Correlação: exemplo 2\\
+
+\begin{center}
+<<fig=TRUE>>=
+plot(da$idade, da$meem) #correlação fraca e negativa
+@
+\end{center}
+\\
+
+Tipos de correlações\\
+
+\\
+Coeficiente    |  X       |  Y\\
+-------------- |--------- |---------
+Pearson        |Continua  |Contínua\\
+Spearman       |Ordinal   |Ordinal\\
+Ponto biserial |Dicotômica|Contínua\\
+Phi            |Dicotômica|Dicotômica\\
+Biserial       |Dicotômica|Contínua\\
+Tetracórica    |Dicotômica|Dicotômica\\
+Policórica     |Categórica|Categórica\\
+\\
+
+
+Correlação de Pearson\\
+
+\\
+- Coeficiente de correlação produto-momento de Pearson \((r)\)\\
+- Mede a **intensidade** e a **direção** da relação entre duas variáveis\\
+- variáveis contínuas\\
+\\
+
+Interpretação do r\\
+\\
+
+Valores de referência |  Interpretação\\
+--------------------- | -----------------
+0 < r < 0,25          |  baixa ou nenhuma associação\\  
+0,25 < r < 0,5        |  grau fraco de associação  \\
+0,5 < r < 0,75        |  grau moderado ou bom de associação\\  
+r > 0,75              |  grau bom ou excelente  \\
+
+\\
+Correlação de Pearson\\
+
+\\
+- Fórmula\\   
+
+\[r = \frac{COV_xy}{S_x S_Y}\]
+
+-- Onde:\\   
+-COV = covariância\\    
+-S = Desvio-padrão\\
+\\
+- Covariância é o número que reflete o grau em que duas variáveis variam juntas.\\
+
+\[COV = \frac{\Sigma(X - \overline{X})(Y - \overline{Y})}{N - 1}\]
+
+\\
+Correlação de Pearson: exemplo no r\\
+
+\\
+<<>>=
+da
+cor(da$idade, da$meem)
+@
+\\
+
+Matriz de correlações\\
+
+\\
+
+<<>>=
+cor(da)
+round(cor(da), 2)
+@
+\\
+
+Gráficos de correlações\\
+
+\\
+\begin{center}
+<<fig=TRUE>>
+pairs(da)
+@
+\end{center}
+
+Correlação de Pearson: exemplo 4\\
+\\
+<<>>=
+animais = c(10, 13, 14, 11, 10, 17, 10, 7, 12, 13)
+frutas = c(11, 11, 14, 9, 7, 14, 9, 4, 13, 12)
+fas = c(3, 20, 27, 26, 16, 41, 34, 13, 31, 38)
+dados.fv = data.frame(animais, frutas, fas)
+dados.fv
+@
+\\
+
+Matriz de correlação: exemplo 4\\
+
+\\
+
+<<>>=
+cor(dados.fv)
+@
+
+\begin{figure}
+<<fig=TRUE>>=
+pairs(dados.fv)
+@
+\end{figure}
+\\
+Teste de significância do r de Pearson\\
+
+\\
+- Mede a associação de duas variáveis na população\\
+- hipótese nula afirma que a correlação populacional *p* (letra gregra rô) é nula\\
+- *p* = 0\\
+- Hipótese alternativa *p* diferente de 0\\
+- Fórmula:\\
+
+\[t = \frac{r \sqrt(N-2)}{\sqrt(1 - r^2)}\]
+
+\\
+Teste de significância do r: exemplo\\
+
+\\
+<<>>=
+cor.test(da$idade, da$meem)
+@
+\\
+
+Correlação de Spearman\\
+
+\\
+<<>>=
+var1 = c(10, 9, 5, 6, 7)
+var2 = c(3, 6, 10, 5, 4)
+cor.test(var1,  var2, method="spearman")
+@
+\\
+
+Regressão: objetivos\\
+
+\\
+- Predizer observações futuras\\   
+- Avaliar o efeito as relações da variável independente (x) sobre uma variável dependente (y)\\   
+- Descrever a estrutura dos dados\\
+\\
+
+Modelo de Regressão Linear\\
+
+\\
+Modelo: y = a + bx
+\\
+Onde:\\   
+y = é o valor a ser predito\\   
+a = é o intercepto (valor quando x = 0)\\  
+b = é a inclinação da reta de regressão  \\ 
+x = é o valor da variável preditora   \\
+
+\\
+Modelo de regressão: exemplo 1\\
+
+\\
+<<>>=
+y = c(110, 120, 90, 70, 50, 80, 40, 40, 50, 30)
+xx = 1:10
+modelo = lm(xx ~ y)
+modelo
+@
+
+\\
+Gráfico de regresssão\\
+
+\begin{figure}
+<<fig=TRUE>>=
+plot(xx ~ y)
+abline(modelo, col=2, lty=2, lwd=2)
+legend("top", legend=c("valores observados", "valores ajustados"), lty=c(NA,2), col=c(1,2), lwd=1:2, bty="n", pch=c(1,NA))
+@
+\end{figure}
+
+Análise do modelo de regressão\\
+
+\\
+<<>>=
+predict(modelo)  # valores preditos pela equação de regressão
+residuals(modelo) # valores resíduos
+@
+\\
+
+Gráfico para análise do modelo de regressão\\
+
+\\
+\begin{figure}
+<<fig=TRUE>>=
+par(mfrow = c(2, 2))
+plot(modelo)
+par(mfrow = c(1, 1))
+@
+\end{figure}
+
+Regressão: exemplo 2\\
+
+\\
+<<>>=
+altura = c(175, 168, 170, 171, 169, 165, 165, 160, 180, 186)
+peso = c(80, 68, 72, 75, 70, 65, 62, 60, 85, 90)
+modelo.exemplo2 = lm(formula = altura ~ peso, x=TRUE, y=TRUE)
+modelo.exemplo2
+@
+\\
+Regressão: exemplo 2\\
+
+\\
+<<>>=
+modelo.exemplo2 <- lm(altura ~ peso)
+summary(modelo.exemplo2)
+@
+\\
+
+Gráfico de dispersão: exemplo 2\\
+\\
+\begin{figure}
+<<fig=TRUE>>=
+plot(peso, altura)
+abline(modelo.exemplo2,col="red")
+@
+\end{figure}
+
+Análise dos resíduos: exemplo 2\\
+
+\\
+<<>>=
+fitted(modelo.exemplo2) # valor estimado de acordo com o melhor ajuste
+resid(modelo.exemplo2) # diferença entre o valor estimado e o valor observado
+@
+\\
+
+Gráfico do modelo de regressão\\
+
+\begin{figure}
+<<fig=TRUE>>=
+plot(peso, altura)
+lines(peso, fitted(modelo.exemplo2))
+@
+\end{figure}
+\\
+Regressão múltipla: exemplo 1\\
+
+\\
+<<>>=
+reg.multipla <- lm(fas ~ animais + frutas)
+summary(reg.multipla)
+@
+\\
+
+Gráficos de regressão múltipla\\
+
+\begin{figure}
+<<fig=TRUE>>=
+valoresPreditos <- fitted(reg.multipla)
+plot(fas ~ valoresPreditos)
+abline(lm(fas ~ valoresPreditos, col="blue"))
+@
+\end{figure}
+
+Análise dos resíduos\\
+
+
+<<>>=
+residuos <- resid(reg.multipla)
+@
+\begin{figure}
+<<fig=TRUE>>=
+hist(residuos)
+@
+\end{figure}
+
+Análise dos resíduos\\
+
+\begin{figure}
+<<fig=TRUE>>=
+plot(valoresPreditos ~ residuos)
+abline(lm(valoresPreditos ~ residuos), col="red")
+@
+\end{figure}
+
+Outros modelos de regressão
+
+\\
+* Modelos lineares Generalizados (glm)\\
+* Modelos não lineares (nlm)\\
+* Modelos não lineares mistos (nlm)\\
+
+\end{document}
