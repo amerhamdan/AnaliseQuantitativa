@@ -1,0 +1,390 @@
+Análise de variância
+
+==========================================
+
+author: Amer Cavalheiro Hamdan
+
+date: 22/11/2013
+
+
+
+Roteiro
+
+=========================================
+
+<br>
+
+- Definição de Análise de variância
+
+- Pré-requisitos
+
+- Lógica da ANOVA
+
+- Tabela da ANOVA
+
+- Exemplo no R
+
+
+
+Definição
+
+========================================
+
+<br>
+
+- Análise de Variância (ANOVA) é uma técnica estatística utilizada para testar diferenças entre dois ou mais médias.
+
+- Variável categórica (VI) e variáveis contínuas (VD) 
+
+
+
+Exemplo 1
+
+=====================================================
+
+```{r, echo=FALSE}
+
+placebo = c(5.3, 10.5, 7.2, 3.5, 5.1, 7.8, 11.2, 2.5, 3.7, 5.3, 6.1, 6.8)
+
+pouco.alc = c(5.5, 7.6, 9.2, 8.5, 2.9, 5.3, 6.6, 6.9, 4.1, 4.4, 8.7, 10.1)
+
+muito.alc = c(8.4, 10.2, 8.7, 9.3, 11.2, 15.8, 7.5, 11.2, 8.9, 8.5, 17.3, 11.2)
+
+dados = data.frame(placebo, pouco.alc, muito.alc)
+
+dados
+
+```
+
+
+
+Por que não usar o Teste t?
+
+========================================================================
+
+<br>
+
+- é cansativo repetir os mesmos procedimentos várias vezes
+
+- aumenta o erro deo tipo I
+
+
+
+
+
+Pré-requisitos
+
+==========================================================
+
+<br>
+
+- **Normalidade**: o conjunto de dados deve ter distribuição normal dentro de cada grupo.
+
+- **Homogeneidade**: a variância de cada um dos grupos deve ser semelhante.
+
+- **Independência amostral** os dados de cada amostra devem ser casuais e independentes.
+
+
+
+Exemplo 1
+
+=================================================================
+
+Placebo (média e desvio-padrão)
+
+```{r, echo=FALSE}
+
+mean(dados$placebo)
+
+sd(dados$placebo)
+
+```
+
+Pouco álcool (média e desvio-padrão)
+
+```{r, echo=FALSE}
+
+mean(dados$pouco.alc)
+
+sd(dados$pouco.alc)
+
+```
+
+
+
+
+
+Exemplo 1
+
+===============================================================
+
+```{r}
+
+#Muito álcool (média e desvio-padrão)
+
+mean(dados$muito.alc)
+
+sd(dados$muito.alc)
+
+```
+
+
+
+Exemplo 1
+
+=======================================================
+
+<br>
+
+
+
+\[H_0 = \mu_1 = \mu_2 = \mu_3 \]
+
+
+
+
+
+
+
+\[H_a = \mu_1 \neq \mu_2 \neq \mu_3 \]
+
+
+
+
+
+Lógica da ANOVA
+
+=======================================
+
+<br>
+
+- Dois aspectos importantes:    
+
+a. variação dentro de grupos    
+
+b. variação entre grupos
+
+
+
+
+
+\[F = \frac{S^2 entre grupos}{S^2 dentre grupos}\]
+
+
+
+
+
+Lógica da ANOVA
+
+==============================================
+
+<br>
+
+Conceitos importantes:      
+
+- **Soma dos quadrados (SQ)**
+
+- **Média quadrática (MQ)**
+
+
+
+
+
+Soma dos quadrados(SQ)
+
+====================================================================
+
+<br>
+
+- O conceito de Soma dos Quadrados (SQ) é o passo inicial para se medir a variação total (SQ total), como também a variação entre (SQ entre) e dentre (SQ dentre) os grupos.
+
+- A fórmula para o SQ total é: \[SQ total = \Sigma(X - \overline{X}_t)^2\]
+
+- A fórmula do SQ dentro é: \[SQ dentro = \Sigma(X - \overline{X}_d)^2\]
+
+- O SQ entre é dado pela fórmula: \[SQ entre = \Sigma(\overline{X}_d - \overline{X}_t)^2\]
+
+
+
+
+
+Média quadrática
+
+=====================================================================================
+
+<br>
+
+- A média quadrática é uma medida de variação total associado ao grau de liberdade.
+
+- Para MQ entre a fórmula é:     
+
+\[MQentre = \frac{SQentre}{glentre}\]
+
+onde:    
+
+- gl entre = K - 1
+
+- K = número de grupos
+
+
+
+Média quadrática
+
+===================================================================================
+
+<br>
+
+- Para MQ dentro sua fórmula é:   
+
+\[MQdentro = \frac{SQdentro}{gldentro}\]
+
+onde:  
+
+- gl dentro = N total - K
+
+
+
+
+
+
+
+Tabela da ANOVA
+
+=============================================
+
+<br>
+
+- O resultado da ANOVA é resumo em forma de tabela como abaixo
+
+--------------------------------------------------
+
+| Variação      | SQ    | gl    | MQ     | F     |
+
+|:--------------|------:|------:|-------:|------:|
+
+|Entre grupos   | 1.685 | 3     | 561,67 | 20,24 | 
+
+|Dentre grupos  | 444   | 16    | 27,75  |       |
+
+|Total          | 2.129 | 19    |        |       |  
+
+
+
+
+
+Exemplo 1: R
+
+=========================================================================
+
+```{r}
+
+#construcao de um data frame
+
+dados1 =data.frame(grupo=gl(3, 12),resultado=c(placebo,pouco.alc,muito.alc))
+
+attach(dados1)
+
+head(dados1)
+
+```
+
+
+
+Exemplo 1: R
+
+===========================================================================
+
+```{r}
+
+#transformar grupo em fator
+
+grupo = factor(grupo)
+
+is.factor(grupo)
+
+```
+
+
+
+Exemplo 1: R
+
+=============================================================================
+
+```{r}
+
+#Modelo da ANOVA
+
+modelo.anova = aov(resultado~grupo)
+
+summary(modelo.anova)
+
+```
+
+
+
+Exemplo 1: R
+
+=============================================================================
+
+```{r}
+
+#Grafico boxplot comparando os grupos
+
+boxplot(placebo, pouco.alc, muito.alc)
+
+```
+
+
+
+Exemplo 1: R
+
+===========================================================================
+
+```{r}
+
+#Pos-Hoc (Teste de Tukey)
+
+TukeyHSD(modelo.anova, ordered = TRUE)
+
+```
+
+
+
+Exemplo 1: R
+
+==========================================================================
+
+```{r}
+
+#grafico do Teste de Tukey
+
+plot(TukeyHSD(modelo.anova, ordered=TRUE))
+
+```
+
+
+
+Resumo
+
+=========================================
+
+<br>
+
+- Definição de Análise de variância
+
+- Pré-requisitos
+
+- Lógica da ANOVA
+
+ - Variância entre / Variância dentre 
+
+- Tabela da ANOVA
+
+ - Soma dos quadrados
+
+ - Média dos quadrados
+
+ - Valor F
+
+- Exemplo no R
+
