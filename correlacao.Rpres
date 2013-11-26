@@ -1,0 +1,327 @@
+Correlação e regressão
+========================================================
+author: Amer Cavalheiro Hamdan
+date: 11/11/2013
+
+
+Resumo
+========================================================
+<br>
+- Definição de correlação
+- Gráfico de correlação
+- Tipos de correlação
+- Correlação de Pearson
+- Regressão linear simples
+- Regressão linear múltipla
+
+
+O que é correlação?
+========================================================
+<br>
+- Correlação é a **associação** ou relacionamento entre duas variáveis.
+  - variam quanto a sua **intensidade** ou força.
+  - variam quanto a direção (**positivas** ou **negativas**)
+  - podem ser representadas por gráficos
+
+Correlação: exemplo 1
+=========================================================
+
+```{r}
+x <- c(1, 2, 3, 4, 5)  #criando um vetor qualquer 
+y <- c(6, 7, 8, 9, 10) #criando outro vetor
+```
+
+```{r}
+plot(x,y) #desenhando um gráfico de dispersão
+
+```
+
+
+Correlação: exemplo 2
+=======================================================
+
+```{r}
+idade = c(76, 60, 70, 72, 69, 73, 64, 70, 88, 66)
+meem = c(27, 29, 27, 18, 27, 25, 28, 24, 25, 28)
+da = data.frame(idade, meem)
+da
+```
+
+
+Correlação: exemplo 2
+======================================================
+
+```{r}
+plot(da$idade, da$meem) #correlação fraca e negativa
+```
+
+
+Tipos de correlações
+==========================================================
+
+Coeficiente    |  X       |  Y
+-------------- |--------- |---------
+Pearson        |Continua  |Contínua
+Spearman       |Ordinal   |Ordinal
+Ponto biserial |Dicotômica|Contínua
+Phi            |Dicotômica|Dicotômica
+Biserial       |Dicotômica|Contínua
+Tetracórica    |Dicotômica|Dicotômica
+Policórica     |Categórica|Categórica
+
+
+Correlação de Pearson
+=======================================================
+<br>
+- Coeficiente de correlação produto-momento de Pearson \((r)\)
+- Mede a **intensidade** e a **direção** da relação entre duas variáveis
+- variáveis contínuas
+
+
+Interpretação do r
+=======================================================
+<br>
+
+Valores de referência |  Interpretação
+--------------------- | -----------------
+0 < r < 0,25          |  baixa ou nenhuma associação  
+0,25 < r < 0,5        |  grau fraco de associação  
+0,5 < r < 0,75        |  grau moderado ou bom de associação  
+r > 0,75              |  grau bom ou excelente  
+
+
+Correlação de Pearson
+========================================================
+<br>
+- Fórmula   
+
+\[r = \frac{COV_xy}{S_x S_Y}\]
+
+-- Onde:   
+-COV = covariância    
+-S = Desvio-padrão
+
+- Covariância é o número que reflete o grau em que duas variáveis variam juntas.
+
+\[COV = \frac{\Sigma(X - \overline{X})(Y - \overline{Y})}{N - 1}\]
+
+
+Correlação de Pearson: exemplo no r
+================================================================
+
+```{r}
+da
+cor(da$idade, da$meem)
+```
+
+
+Matriz de correlações
+===================================================================
+<br>
+
+```{r}
+cor(da)
+round(cor(da), 2)
+```
+
+
+Gráficos de correlações
+==========================================================================
+<br>
+
+```{r}
+pairs(da)
+```
+
+
+Correlação de Pearson: exemplo 4
+===================================================================
+
+```{r}
+animais = c(10, 13, 14, 11, 10, 17, 10, 7, 12, 13)
+frutas = c(11, 11, 14, 9, 7, 14, 9, 4, 13, 12)
+fas = c(3, 20, 27, 26, 16, 41, 34, 13, 31, 38)
+dados.fv = data.frame(animais, frutas, fas)
+dados.fv
+```
+
+
+Matriz de correlação: exemplo 4
+=====================================================================
+
+```{r}
+cor(dados.fv)
+pairs(dados.fv)
+```
+
+
+Teste de significância do r de Pearson
+========================================================================
+<br>
+- Mede a associação de duas variáveis na população
+- hipótese nula afirma que a correlação populacional *p* (letra gregra rô) é nula
+- *p* = 0
+- Hipótese alternativa *p* diferente de 0
+- Fórmula:
+
+\[t = \frac{r \sqrt(N-2)}{\sqrt(1 - r^2)}\]
+
+
+Teste de significância do r: exemplo
+=========================================================================
+```{r}
+cor.test(da$idade, da$meem)
+```
+
+
+Correlação de Spearman
+====================================================================
+
+```{r}
+var1 = c(10, 9, 5, 6, 7)
+var2 = c(3, 6, 10, 5, 4)
+cor.test(var1,  var2, method="spearman")
+```
+
+
+Regressão: objetivos
+========================================================
+<br>
++ Predizer observações futuras   
++ Avaliar o efeito as relações da variável independente (x) sobre uma variável dependente (y)   
++ Descrever a estrutura dos dados
+
+Modelo de Regressão Linear
+===================================================================
+<br>
+### Modelo: y = a + bx
+
+Onde:   
+y = é o valor a ser predito   
+a = é o intercepto (valor quando x = 0)  
+b = é a inclinação da reta de regressão   
+x = é o valor da variável preditora   
+
+
+Modelo de regressão: exemplo 1
+========================================================================
+
+```{r}
+y = c(110, 120, 90, 70, 50, 80, 40, 40, 50, 30)
+xx = 1:10
+
+modelo = lm(xx ~ y)
+modelo
+```
+
+
+Gráfico de regresssão
+=====================================================================
+
+```{r}
+plot(xx ~ y)
+abline(modelo, col=2, lty=2, lwd=2)
+legend("top", legend=c("valores observados", "valores ajustados"), lty=c(NA,2), col=c(1,2), lwd=1:2, bty="n", pch=c(1,NA))
+```
+
+Análise do modelo de regressão
+====================================================================
+
+```{r}
+predict(modelo)  # valores preditos pela equação de regressão
+residuals(modelo) # valores resíduos
+```
+
+Gráfico para análise do modelo de regressão
+====================================================================
+
+```{r}
+par(mfrow = c(2, 2))
+plot(modelo)
+par(mfrow = c(1, 1))
+```
+
+
+Regressão: exemplo 2
+==========================================================================
+
+```{r}
+altura = c(175, 168, 170, 171, 169, 165, 165, 160, 180, 186)
+peso = c(80, 68, 72, 75, 70, 65, 62, 60, 85, 90)
+
+modelo.exemplo2 = lm(formula = altura ~ peso, x=TRUE, y=TRUE)
+modelo.exemplo2
+```
+
+Regressão: exemplo 2
+==========================================================================
+
+```{r}
+modelo.exemplo2 <- lm(altura ~ peso)
+summary(modelo.exemplo2)
+```
+
+Gráfico de dispersão: exemplo 2
+=======================================================================
+
+```{r}
+plot(peso, altura)
+abline(modelo.exemplo2,col="red")
+```
+
+Análise dos resíduos: exemplo 2
+==========================================================================
+
+```{r}
+fitted(modelo.exemplo2) # valor estimado de acordo com o melhor ajuste
+resid(modelo.exemplo2) # diferença entre o valor estimado e o valor observado
+```
+
+Gráfico do modelo de regressão
+=========================================================================
+
+```{r}
+plot(peso, altura)
+lines(peso, fitted(modelo.exemplo2))
+```
+
+
+Regressão múltipla: exemplo 1
+========================================================================
+
+```{r}
+reg.multipla <- lm(fas ~ animais + frutas)
+summary(reg.multipla)
+```
+
+Gráficos de regressão múltipla
+========================================================================
+```{r}
+valoresPreditos <- fitted(reg.multipla)
+
+plot(fas ~ valoresPreditos)
+abline(lm(fas ~ valoresPreditos, col="blue"))
+```
+
+Análise dos resíduos
+====================================================================
+```{r}
+residuos <- resid(reg.multipla)
+hist(residuos)
+```
+
+
+Análise dos resíduos
+===================================================================
+```{r}
+plot(valoresPreditos ~ residuos)
+abline(lm(valoresPreditos ~ residuos), col="red")
+```
+
+
+Outros modelos de regressão
+==========================================
+<br>
+* Modelos lineares Generalizados (glm)
+* Modelos não lineares (nlm)
+* Modelos não lineares mistos (nlm)
